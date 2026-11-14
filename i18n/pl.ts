@@ -52,7 +52,7 @@ export const pl = {
     markUndone: (name: string) => `Oznacz jako niezrobione: ${name}`,
     catches: {
       title: 'Złapane wstrzymanie',
-      hint: 'Zauważyłeś, że wstrzymujesz oddech? Dotknij +1 i zrób spokojny wydech.',
+      hint: 'Gdy zauważysz, że wstrzymujesz oddech, dotknij +1 i zrób spokojny, długi wydech.',
       add: 'Dodaj złapane wstrzymanie',
       undo: 'Cofnij ostatnie',
       goal: (n: number, goal: number) => `${n} / cel ${goal}`,
@@ -60,7 +60,7 @@ export const pl = {
     },
     tension: {
       title: 'Napięcie dnia',
-      hint: '1 = pełen luz, 10 = bardzo spięty',
+      hint: '1 = pełen luz, 10 = bardzo duże napięcie',
       level: (n: number) => `Napięcie ${n} z 10`,
       clear: 'Wyczyść',
     },
@@ -80,6 +80,7 @@ export const pl = {
     showTips: 'Wskazówki',
     hideTips: 'Zwiń',
     applyWeek: 'Zastosuj ustawienia tygodnia',
+    applied: 'Ustawienia tygodnia zastosowane',
     weeks: [
       {
         goal: 'Poczuć przeponę',
@@ -117,6 +118,9 @@ export const pl = {
     deleted: (name: string) => `Usunięto „${name}”`,
     reorderHint: 'Przytrzymaj i przeciągnij, aby zmienić kolejność',
     dragHandle: (name: string) => `Zmień kolejność: ${name}`,
+    moveUp: 'Przesuń wyżej',
+    moveDown: 'Przesuń niżej',
+    restored: 'Przywrócono ćwiczenie',
     toggleActive: (name: string) => `Aktywne: ${name}`,
     deleteConfirmTitle: 'Usunąć ćwiczenie?',
     deleteConfirmBody: 'Historia wykonań zostanie zachowana.',
@@ -139,6 +143,7 @@ export const pl = {
     },
   },
   calendar: { title: 'Kalendarz', placeholder: 'Kalendarz pojawi się w etapie 4.' },
+  pacer: { placeholder: 'Pacer pojawi się w etapie 3.', markDone: 'Oznacz jako zrobione' },
   progress: { title: 'Postępy', placeholder: 'Wykresy pojawią się w etapie 5.' },
   settings: {
     title: 'Ustawienia',

@@ -65,7 +65,7 @@ export function EmptyState({
 
 export function ErrorState({ error, onRetry }: { error?: unknown; onRetry?: () => void }) {
   const { spacing } = useTheme();
-  if (__DEV__ && error) console.warn(error);
+  if (__DEV__ && error) console.warn(error, (error as { cause?: unknown }).cause);
   return (
     <View
       style={{

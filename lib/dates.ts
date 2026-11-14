@@ -105,3 +105,8 @@ export function formatDuration(totalSeconds: number): string {
   const s = Math.max(0, Math.round(totalSeconds));
   return `${Math.floor(s / 60)}:${pad(s % 60)}`;
 }
+
+/** Znacznik ISO (UTC) → lokalny DateKey. */
+export function isoToDateKey(iso: string): DateKey {
+  return toDateKey(new Date(iso));
+}

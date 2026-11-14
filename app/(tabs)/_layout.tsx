@@ -16,7 +16,7 @@ export default function TabsLayout() {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
         },
-        tabBarLabelStyle: { fontFamily: fontFamilies.semibold, fontSize: 11 },
+        tabBarLabelStyle: { fontFamily: fontFamilies.semibold, fontSize: 11, lineHeight: 14 },
         sceneStyle: { backgroundColor: colors.background },
       }}
     >

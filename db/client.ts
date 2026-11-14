@@ -10,3 +10,6 @@ export const sqlite = openDatabaseSync(DB_NAME, { enableChangeListener: true });
 sqlite.execSync('PRAGMA journal_mode = WAL;');
 
 export const db = drizzle(sqlite, { schema });
+
+/** Na urządzeniach nic nie trzeba przygotowywać (patrz client.web.ts). */
+export async function prepareDb(): Promise<void> {}

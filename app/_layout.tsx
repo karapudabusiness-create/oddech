@@ -6,7 +6,6 @@ import {
   NunitoSans_800ExtraBold,
   useFonts,
 } from '@expo-google-fonts/nunito-sans';
-import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -15,10 +14,10 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { ErrorState } from '@/components/ui';
-import { db } from '@/db/client';
-import migrations from '@/db/migrations/migrations';
+import { ErrorState, ToastHost } from '@/components/ui';
+import { db, prepareDb } from '@/db/client';
 import { seedIfNeeded } from '@/db/seed';
+import { useDbMigrations } from '@/db/useDbMigrations';
 import { useSettings } from '@/features/settings/useSettings';
 import { ThemeProvider, useTheme } from '@/theme';
 
@@ -50,12 +49,44 @@ function Navigation() {
         }}
       >
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="exercise/[id]" options={{ presentation: 'modal' }} />
+        <Stack.Screen
+          name="pacer/[exerciseId]"
+          options={{ presentation: 'fullScreenModal', animation: 'fade' }}
+        />
       </Stack>
+      <ToastHost />
     </>
   );
 }
 
 export default function RootLayout() {
+  const [dbReady, setDbReady] = useState(false);
+  const [dbError, setDbError] = useState<unknown>(null);
+  useEffect(() => {
+    prepareDb()
+      .then(() => setDbReady(true))
+      .catch(setDbError);
+  }, []);
+  if (dbError) return <Failure error={dbError} />;
+  if (!dbReady) return null;
+  return <App />;
+}
+
+function Failure({ error }: { error: unknown }) {
+  useEffect(() => {
+    void SplashScreen.hideAsync();
+  }, []);
+  return (
+    <SafeAreaProvider>
+      <ThemeProvider mode="system">
+        <ErrorState error={error} />
+      </ThemeProvider>
+    </SafeAreaProvider>
+  );
+}
+
+function App() {
   const [fontsLoaded, fontError] = useFonts({
     NunitoSans_400Regular,
     NunitoSans_500Medium,
@@ -63,7 +94,7 @@ export default function RootLayout() {
     NunitoSans_700Bold,
     NunitoSans_800ExtraBold,
   });
-  const migration = useMigrations(db, migrations);
+  const migration = useDbMigrations();
   const [seeded, setSeeded] = useState(false);
   const [seedError, setSeedError] = useState<unknown>(null);
 
@@ -81,15 +112,7 @@ export default function RootLayout() {
     if (ready || failed) void SplashScreen.hideAsync();
   }, [ready, failed]);
 
-  if (failed) {
-    return (
-      <SafeAreaProvider>
-        <ThemeProvider mode="system">
-          <ErrorState error={failed} />
-        </ThemeProvider>
-      </SafeAreaProvider>
-    );
-  }
+  if (failed) return <Failure error={failed} />;
   if (!ready) return null;
 
   return (
