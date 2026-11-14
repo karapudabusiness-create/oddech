@@ -207,3 +207,11 @@ export function dayLogsInRangeQuery(db: Db, from: DateKey, to: DateKey) {
       ),
     );
 }
+
+/** Wszystkie dni, w których wykonano cokolwiek (seria dni). */
+export function activeDaysQuery(db: Db) {
+  return db
+    .selectDistinct({ date: exerciseCompletions.date })
+    .from(exerciseCompletions)
+    .where(isNull(exerciseCompletions.deletedAt));
+}

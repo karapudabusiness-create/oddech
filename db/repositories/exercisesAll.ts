@@ -10,6 +10,7 @@ export function allExercisesQuery(db: Db) {
       createdAt: exercises.createdAt,
       deletedAt: exercises.deletedAt,
       seedKey: exercises.seedKey,
+      minutes: exercises.minutes,
     })
     .from(exercises);
 }

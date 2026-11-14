@@ -1,24 +1,15 @@
-import { and, isNull } from 'drizzle-orm';
 import { useLiveQuery } from '@/hooks/useLiveQuery';
 import { useMemo } from 'react';
 
 import { db } from '@/db/client';
-import { completionsForDateQuery, dayLogQuery } from '@/db/repositories/days';
+import { activeDaysQuery, completionsForDateQuery, dayLogQuery } from '@/db/repositories/days';
 import { exercisesQuery } from '@/db/repositories/exercises';
-import { exerciseCompletions, type Exercise, type Slot } from '@/db/schema';
+import type { Exercise, Slot } from '@/db/schema';
 import { programPhase, SLOT_ORDER, weekPlanFor } from '@/features/program/plan';
 import { useSettings } from '@/features/settings/useSettings';
 import { dayProgress } from '@/features/stats/dayProgress';
 import { computeStreak } from '@/features/stats/streak';
 import type { DateKey } from '@/lib/dates';
-
-/** Wszystkie dni, w których wykonano cokolwiek (do serii). */
-function activeDaysQuery() {
-  return db
-    .selectDistinct({ date: exerciseCompletions.date })
-    .from(exerciseCompletions)
-    .where(and(isNull(exerciseCompletions.deletedAt)));
-}
 
 export interface SlotGroup {
   slot: Slot;
@@ -30,7 +21,7 @@ export function useDayData(date: DateKey, today: DateKey) {
   const exercisesQ = useLiveQuery(exercisesQuery(db));
   const completionsQ = useLiveQuery(completionsForDateQuery(db, date), [date]);
   const logQ = useLiveQuery(dayLogQuery(db, date), [date]);
-  const activeDaysQ = useLiveQuery(activeDaysQuery());
+  const activeDaysQ = useLiveQuery(activeDaysQuery(db));
 
   const exercises = exercisesQ.data;
   const completions = completionsQ.data;

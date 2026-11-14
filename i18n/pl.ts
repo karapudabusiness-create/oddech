@@ -218,7 +218,49 @@ export const pl = {
     noPacer: 'To ćwiczenie nie korzysta z pacera.',
     a11yPhase: (phase: string, n: number) => `${phase}, ${n}`,
   },
-  progress: { title: 'Postępy', placeholder: 'Wykresy pojawią się w etapie 5.' },
+  progress: {
+    title: 'Postępy',
+    ranges: { '7': '7 dni', '30': '30 dni', '90': '90 dni', program: 'Program' },
+    rangeA11y: 'Zakres wykresów',
+    showTable: 'Tabela',
+    showChart: 'Wykres',
+    table: { day: 'Dzień', week: 'Tydzień', tension: 'Ocena (średnia 7 dni)' },
+    streakCurrent: 'Obecna seria',
+    streakLongest: 'Najdłuższa seria',
+    days: (n: number, unit: string) => `${n} ${unit}`,
+    tension: {
+      title: 'Napięcie w czasie',
+      daily: 'Dzienna ocena',
+      avg: 'Średnia 7 dni',
+      subtitle: (avg: string, change: number | null) =>
+        `Średnio ${avg} / 10${change == null || change === 0 ? '' : change < 0 ? ` · spadek o ${Math.abs(change).toLocaleString('pl-PL')}` : ` · wzrost o ${change.toLocaleString('pl-PL')}`}`,
+      empty: 'Oceniaj napięcie dnia na ekranie „Dziś”, a tu zobaczysz, jak się zmienia.',
+      a11y: (avg: string, change: number | null) =>
+        `Wykres napięcia. Średnio ${avg} na 10.${change == null ? '' : change < 0 ? ` Średnia krocząca spadła o ${Math.abs(change)}.` : change > 0 ? ` Średnia krocząca wzrosła o ${change}.` : ''}`,
+    },
+    catches: {
+      title: 'Złapane wstrzymania',
+      titleWeekly: 'Złapane wstrzymania (tygodniowo)',
+      label: 'Wstrzymania',
+      goal: 'cel',
+      subtitle: (total: number, perDay: string) => `Razem ${total} · średnio ${perDay} dziennie`,
+      empty: 'Gdy zauważysz wstrzymany oddech, dotknij +1 na ekranie „Dziś”.',
+      a11y: (total: number, perDay: string) =>
+        `Wykres złapanych wstrzymań. Razem ${total}, średnio ${perDay} dziennie.`,
+    },
+    minutes: {
+      title: 'Minuty ćwiczeń tygodniowo',
+      label: 'Minuty',
+      subtitle: (total: number) => `Razem ${total} min w wybranym okresie`,
+      empty: 'Wykonane ćwiczenia pojawią się tutaj jako minuty w tygodniu.',
+      weekOf: (d: string) => `tydz. od ${d}`,
+      partial: ' (trwa)',
+      a11y: (total: number, weeks: number) =>
+        `Wykres minut ćwiczeń w ${weeks} tygodniach. Razem ${total} minut.`,
+    },
+    minutesUnit: (n: number) => `${n} min`,
+    encouragement: 'Każdy spokojny oddech się liczy. Patrz na trend, nie na pojedyncze dni.',
+  },
   settings: {
     title: 'Ustawienia',
     theme: 'Motyw',

@@ -30,6 +30,8 @@ export interface Palette {
   scale: [string, string, string, string];
   overlay: string;
   shadow: string;
+  /** Kolory wykresów – zwalidowane (pasmo jasności, chroma, kontrast ≥ 3:1 z surface). */
+  chart: { blue: string; mint: string; grid: string };
 }
 
 export const palettes: Record<ColorScheme, Palette> = {
@@ -55,6 +57,7 @@ export const palettes: Record<ColorScheme, Palette> = {
     scale: ['#E4F2F1', '#A8DCCB', '#3BB08F', '#2C7AAB'],
     overlay: 'rgba(18, 48, 63, 0.35)',
     shadow: '#12303F',
+    chart: { blue: '#2C7AAB', mint: '#2E9A7B', grid: '#E3EEF2' },
   },
   dark: {
     primary: '#5DB2E3',
@@ -77,5 +80,6 @@ export const palettes: Record<ColorScheme, Palette> = {
     scale: ['#1A3540', '#25615A', '#3FA587', '#5DB2E3'],
     overlay: 'rgba(0, 0, 0, 0.55)',
     shadow: '#000000',
+    chart: { blue: '#3E9CD0', mint: '#3FAA86', grid: '#1E3842' },
   },
 };
