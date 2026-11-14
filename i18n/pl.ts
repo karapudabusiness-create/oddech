@@ -477,8 +477,20 @@ export const pl = {
         'Rejestracja jest wyłączona w Supabase. Włącz: Authentication → Sign In / Providers → Allow new users to sign up oraz Email.',
       'email-send':
         'Supabase nie mógł wysłać e-maila. Sprawdź szablon wiadomości (Authentication → Emails) i logi Auth w panelu.',
+      'bad-url':
+        'Pod adresem z .env nie odpowiada API Supabase. EXPO_PUBLIC_SUPABASE_URL powinien wyglądać tak: https://twojprojekt.supabase.co (Project Settings → Data API → Project URL).',
       other: 'Coś poszło nie tak. Spróbuj ponownie.',
     },
+    urlIssueTitle: 'Adres Supabase w .env wygląda na błędny',
+    urlIssues: {
+      dashboard:
+        'To adres panelu (supabase.com/dashboard…), a nie projektu. Użyj Project URL: https://<id-projektu>.supabase.co',
+      path: 'Adres ma dopisaną ścieżkę (np. /rest/v1). Zostaw samo: https://<id-projektu>.supabase.co',
+      'not-https': 'Adres musi zaczynać się od https://',
+      format: 'Adres ma niepoprawny format. Wzór: https://<id-projektu>.supabase.co',
+      quotes: 'Usuń cudzysłowy wokół adresu w pliku .env.',
+    },
+    urlIssueRestart: 'Po poprawce zatrzymaj serwer (Ctrl+C) i uruchom ponownie npm run go.',
     rowSignedOut: 'Zaloguj się, by synchronizować',
     details: (d: string) => `Szczegóły: ${d}`,
   },

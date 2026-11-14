@@ -21,6 +21,7 @@ import { useDbMigrations } from '@/db/useDbMigrations';
 import { useReminderSync } from '@/features/reminders/useReminderSync';
 import { useSyncManager } from '@/sync/manager';
 import { useSettings } from '@/features/settings/useSettings';
+import { strings } from '@/i18n';
 import { ThemeProvider, useTheme } from '@/theme';
 
 void SplashScreen.preventAutoHideAsync();
@@ -50,9 +51,10 @@ function Navigation() {
           headerTintColor: colors.primaryText,
           headerTitleStyle: { fontFamily: 'NunitoSans_700Bold', color: colors.text },
           headerShadowVisible: false,
+          headerBackButtonDisplayMode: 'minimal',
         }}
       >
-        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(tabs)" options={{ title: strings.common.appName }} />
         <Stack.Screen name="exercise/[id]" options={{ presentation: 'modal' }} />
         <Stack.Screen
           name="day/[date]"

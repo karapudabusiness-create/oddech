@@ -16,6 +16,7 @@ export type AuthErrorCode =
   | 'invalid-key'
   | 'signups-disabled'
   | 'email-send'
+  | 'bad-url'
   | 'other';
 
 export class AuthActionError extends Error {
@@ -37,6 +38,15 @@ export function mapAuthError(
   const raw = e?.message ?? '';
   const msg = raw.toLowerCase();
   const detail = [e?.status, e?.code, raw].filter(Boolean).join(' · ');
+  // Serwer odpowiedział, ale nie jak API Supabase (pusta odpowiedź / HTML) → zły adres projektu.
+  if (
+    msg.includes('json parse') ||
+    msg.includes('unexpected end') ||
+    msg.includes('unexpected token') ||
+    e?.status === 404
+  ) {
+    return new AuthActionError('bad-url', detail);
+  }
   if (msg.includes('api key') || msg.includes('apikey') || e?.status === 401) {
     return new AuthActionError('invalid-key', detail);
   }

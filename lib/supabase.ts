@@ -6,12 +6,15 @@ import { AppState, Platform } from 'react-native';
 
 import { env, isSupabaseConfigured } from './env';
 
+/** Adres bez końcowego ukośnika (supabase-js dokleja ścieżki /auth/v1, /rest/v1). */
+const baseUrl = env.supabaseUrl.replace(/\/+$/, '');
+
 /**
  * Klient Supabase – null, gdy w `.env` nie ma kluczy (aplikacja działa wtedy w pełni lokalnie).
  * Sesja jest przechowywana w AsyncStorage i odświeżana automatycznie, gdy aplikacja jest aktywna.
  */
 export const supabase: SupabaseClient | null = isSupabaseConfigured()
-  ? createClient(env.supabaseUrl, env.supabaseAnonKey, {
+  ? createClient(baseUrl, env.supabaseAnonKey, {
       auth: {
         storage: AsyncStorage,
         autoRefreshToken: true,

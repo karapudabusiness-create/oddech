@@ -25,6 +25,7 @@ describe('mapAuthError – rozpoznawanie przyczyn', () => {
       'invalid-code',
     ],
     [{ message: 'Network request failed' }, 'network'],
+    [{ message: 'JSON Parse error: Unexpected end of input' }, 'bad-url'],
     [{ message: 'Something odd', status: 500 }, 'other'],
   ];
   it.each(cases)('%j → %s', (input, code) => {
