@@ -23,5 +23,28 @@ export function supabaseUrlIssue(url: string = env.supabaseUrl): SupabaseUrlIssu
   return null;
 }
 
+/**
+ * Adres bazowy dla klienta: dla *.supabase.co sam host (obcina np. /rest/v1 skopiowane z panelu),
+ * w innych przypadkach adres bez końcowego ukośnika.
+ */
+export function supabaseBaseUrl(url: string = env.supabaseUrl): string {
+  const clean = url.replace(/^["']|["']$/g, '').trim();
+  try {
+    const parsed = new URL(clean);
+    if (parsed.hostname.endsWith('.supabase.co')) return `https://${parsed.hostname}`;
+  } catch {
+    // niepoprawny adres – zwracamy jak jest, ostrzeżenie pokaże ekran Konto
+  }
+  return clean.replace(/\/+$/, '');
+}
+
+/** Pomyłki, których nie da się poprawić automatycznie (ścieżkę w *.supabase.co poprawiamy sami). */
+export function blockingUrlIssue(url: string = env.supabaseUrl): SupabaseUrlIssue | null {
+  const issue = supabaseUrlIssue(url);
+  if ((issue === 'path' || issue === 'quotes') && /\.supabase\.co(\/|$|["'])/.test(url))
+    return null;
+  return issue;
+}
+
 export const isSupabaseConfigured = (): boolean =>
-  env.supabaseUrl.startsWith('https://') && env.supabaseAnonKey.length > 20;
+  supabaseBaseUrl().startsWith('https://') && env.supabaseAnonKey.length > 20;

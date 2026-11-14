@@ -23,7 +23,7 @@ import {
   verifyLoginCode,
 } from '@/features/account/actions';
 import { strings } from '@/i18n';
-import { supabaseUrlIssue } from '@/lib/env';
+import { blockingUrlIssue } from '@/lib/env';
 import { supabase } from '@/lib/supabase';
 import { useAccount } from '@/stores/account';
 import { useToast } from '@/stores/toast';
@@ -305,12 +305,12 @@ export default function AccountScreen() {
             <Text color="textMuted">{t.notConfiguredBody}</Text>
           </Card>
         ) : null}
-        {supabase && supabaseUrlIssue() ? (
+        {supabase && blockingUrlIssue() ? (
           <Card tone="soft" style={{ gap: spacing.sm }}>
             <Text variant="subheading" color="dangerText">
               {t.urlIssueTitle}
             </Text>
-            <Text>{t.urlIssues[supabaseUrlIssue()!]}</Text>
+            <Text>{t.urlIssues[blockingUrlIssue()!]}</Text>
             <Text variant="caption" color="textMuted">
               {t.urlIssueRestart}
             </Text>
