@@ -38,13 +38,23 @@
           "image": "./assets/splash-icon.png",
           "imageWidth": 160,
           "backgroundColor": "#F3F8FA",
-          "dark": { "backgroundColor": "#0B1A22" }
+          "dark": {
+            "backgroundColor": "#0B1A22"
+          }
         }
       ],
       "expo-audio",
       "expo-sharing",
       "expo-localization",
-      "expo-secure-store"
+      "expo-secure-store",
+      "@react-native-community/datetimepicker",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/android-icon-monochrome.png",
+          "color": "#2C7AAB"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
