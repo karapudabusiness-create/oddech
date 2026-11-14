@@ -6,6 +6,7 @@ export * from './IconButton';
 export * from './ProgressBar';
 export * from './Screen';
 export * from './Sheet';
+export * from './Stepper';
 export * from './States';
 export * from './Text';
 export * from './Toast';

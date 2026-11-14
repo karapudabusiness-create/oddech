@@ -16,12 +16,12 @@ Zeskanuj kod QR aplikacją **Expo Go** (Android) lub aparatem (iOS).
 
 ## Skrypty
 
-| Polecenie | Opis |
-|---|---|
-| `npm start` | serwer deweloperski Expo |
-| `npm test` | testy jednostkowe (Jest) |
-| `npm run typecheck` | TypeScript |
-| `npm run lint` | ESLint + Prettier |
+| Polecenie             | Opis                                           |
+| --------------------- | ---------------------------------------------- |
+| `npm start`           | serwer deweloperski Expo                       |
+| `npm test`            | testy jednostkowe (Jest)                       |
+| `npm run typecheck`   | TypeScript                                     |
+| `npm run lint`        | ESLint + Prettier                              |
 | `npm run db:generate` | nowa migracja SQLite po zmianie `db/schema.ts` |
 
 ## Struktura
