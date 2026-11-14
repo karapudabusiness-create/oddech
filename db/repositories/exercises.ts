@@ -66,7 +66,7 @@ async function nextSortOrder(db: Db, slot: Slot): Promise<number> {
 export async function createExercise(
   db: Db,
   input: ExerciseInput,
-  extra: { seedKey?: string; sortOrder?: number } = {},
+  extra: { seedKey?: string; sortOrder?: number; updatedAt?: string } = {},
 ): Promise<string> {
   const now = nowIso();
   const id = uuid();
@@ -78,7 +78,7 @@ export async function createExercise(
     description: input.description.trim(),
     sortOrder: extra.sortOrder ?? (await nextSortOrder(db, input.slot)),
     createdAt: now,
-    updatedAt: now,
+    updatedAt: extra.updatedAt ?? now,
     dirty: true,
   });
   notifyLocalChange();

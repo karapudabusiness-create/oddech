@@ -7,6 +7,7 @@ import { meta, type Slot } from './schema';
 import type { Db } from './types';
 
 const SEED_FLAG = 'seeded_v1';
+export const EPOCH = '1970-01-01T00:00:00.000Z';
 
 /** Idempotentne: ustawienia + 7 ćwiczeń startowych przy pierwszym uruchomieniu. */
 export async function seedIfNeeded(db: Db): Promise<void> {
@@ -30,7 +31,8 @@ export async function seedIfNeeded(db: Db): Promise<void> {
         description: e.description,
         active: true,
       },
-      { seedKey: e.key, sortOrder },
+      // Znacznik z 1970 r.: każda prawdziwa zmiana (np. z konta na innym urządzeniu) wygrywa z wartością startową.
+      { seedKey: e.key, sortOrder, updatedAt: EPOCH },
     );
   }
   await db.insert(meta).values({ key: SEED_FLAG, value: new Date().toISOString() });

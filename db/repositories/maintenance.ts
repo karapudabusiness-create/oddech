@@ -4,7 +4,10 @@ import { seedIfNeeded } from '../seed';
 import type { Db } from '../types';
 
 /** Usuwa wszystkie dane z urządzenia i zaczyna od nowa (ćwiczenia startowe, onboarding). */
-export async function wipeLocalData(db: Db): Promise<void> {
+export async function wipeLocalData(
+  db: Db,
+  opts: { keepOnboarding?: boolean } = {},
+): Promise<void> {
   db.transaction((tx) => {
     tx.delete(exerciseCompletions).run();
     tx.delete(catchEvents).run();
@@ -14,5 +17,9 @@ export async function wipeLocalData(db: Db): Promise<void> {
     tx.delete(meta).run();
   });
   await seedIfNeeded(db);
+  if (opts.keepOnboarding) {
+    // Bez zmiany updated_at – domyślne ustawienia nadal przegrywają z kontem po zalogowaniu.
+    await db.update(settings).set({ onboardingDone: true });
+  }
   notifyLocalChange();
 }

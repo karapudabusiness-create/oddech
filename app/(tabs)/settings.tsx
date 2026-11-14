@@ -24,7 +24,9 @@ import { programPhase } from '@/features/program/plan';
 import { useSettings } from '@/features/settings/useSettings';
 import { useToday } from '@/hooks/useToday';
 import { strings } from '@/i18n';
+import { useAccount } from '@/stores/account';
 import { useToast } from '@/stores/toast';
+import { SyncBadge } from '@/components/account/SyncBadge';
 import { useTheme, type ThemeMode } from '@/theme';
 
 const t = strings.settings;
@@ -34,6 +36,7 @@ export default function SettingsScreen() {
   const today = useToday();
   const { spacing } = useTheme();
   const showToast = useToast((st) => st.show);
+  const session = useAccount((st) => st.session);
 
   if (!settings) return <LoadingState />;
   const sound = settings.sound;
@@ -191,7 +194,12 @@ export default function SettingsScreen() {
       </Section>
 
       <Section title={t.sections.account}>
-        <Row label={t.account} hint={t.accountHint} disabled />
+        <Row
+          label={t.account}
+          hint={session ? session.user.email : strings.account.rowSignedOut}
+          right={session ? <SyncBadge compact /> : undefined}
+          onPress={() => router.push('/account')}
+        />
         <Divider />
         <Row
           label={t.exportJson}

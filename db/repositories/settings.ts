@@ -42,7 +42,8 @@ export async function ensureSettings(db: Db, today = todayKey()): Promise<void> 
       haptics: true,
       reminders: DEFAULT_REMINDERS,
       onboardingDone: false,
-      updatedAt: nowIso(),
+      // Wartości domyślne przegrywają z każdym zapisem z konta (synchronizacja LWW).
+      updatedAt: '1970-01-01T00:00:00.000Z',
       dirty: true,
     })
     .onConflictDoNothing();

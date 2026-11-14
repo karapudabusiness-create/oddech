@@ -19,6 +19,7 @@ import { db, prepareDb } from '@/db/client';
 import { seedIfNeeded } from '@/db/seed';
 import { useDbMigrations } from '@/db/useDbMigrations';
 import { useReminderSync } from '@/features/reminders/useReminderSync';
+import { useSyncManager } from '@/sync/manager';
 import { useSettings } from '@/features/settings/useSettings';
 import { ThemeProvider, useTheme } from '@/theme';
 
@@ -34,6 +35,7 @@ function ThemedApp({ children }: { children: ReactNode }) {
 function Navigation() {
   const { colors, scheme } = useTheme();
   useReminderSync();
+  useSyncManager();
   useEffect(() => {
     void SystemUI.setBackgroundColorAsync(colors.background);
   }, [colors.background]);
