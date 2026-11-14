@@ -21,6 +21,11 @@ export function DaySummary({ progress, streak }: { progress: DayProgress; streak
         </Text>
       </View>
       <ProgressBar value={progress.ratio} label={label} />
+      {progress.total > 0 && progress.done === progress.total ? (
+        <Text color="secondaryText" variant="bodyStrong" accessibilityLiveRegion="polite">
+          {strings.today.allDone}
+        </Text>
+      ) : null}
       {streak !== undefined ? (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}>
           {streak > 0 ? <Flame color={colors.danger} size={18} /> : null}

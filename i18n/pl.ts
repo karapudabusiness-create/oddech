@@ -42,6 +42,7 @@ export const pl = {
     dayProgress: (done: number, total: number) => `${done} z ${total} ćwiczeń`,
     streak: (n: number, unit: string) => `🔥 ${n} ${unit} z rzędu`,
     streakZero: 'Każdy dzień to nowy początek',
+    allDone: 'Wszystko na dziś zrobione 🌿 Oddychaj spokojnie.',
     noExercises: 'Nie masz aktywnych ćwiczeń.',
     noExercisesCta: 'Przejdź do biblioteki',
     inPlan: 'W planie',
@@ -303,6 +304,34 @@ export const pl = {
     silentModeHint: 'Dotyczy iPhone’a z włączonym przełącznikiem wyciszenia.',
     haptics: 'Wibracje',
     hapticsHint: 'Przy zmianie fazy oddechu i dotknięciach.',
+    exportJson: 'Eksportuj wszystkie dane (JSON)',
+    exportJsonHint: 'Kopia zapasowa – można ją zaimportować na innym telefonie.',
+    exportCsv: 'Eksportuj podsumowanie dni (CSV)',
+    exportCsvHint: 'Do arkusza kalkulacyjnego: wykonanie, minuty, licznik, napięcie, notatki.',
+    importJson: 'Importuj z pliku JSON',
+    importJsonHint: 'Kopia z tej aplikacji lub dane z prototypu HTML.',
+    importConfirmTitle: 'Zaimportować dane?',
+    importConfirmOddech: (n: number) =>
+      `Kopia zawiera ${n} dni z wpisami. Dane zostaną połączone z obecnymi – przy konflikcie wygrywa nowsza zmiana.`,
+    importConfirmPrototype: (n: number) =>
+      `Dane z prototypu: ${n} dni. Zostaną dodane do obecnych – nic nie zostanie usunięte.`,
+    importConfirm: 'Importuj',
+    importDone: (days: number, completions: number) =>
+      `Zaimportowano: ${days} dni, ${completions} wykonań`,
+    importErrors: {
+      json: 'To nie jest poprawny plik JSON.',
+      format: 'Nie rozpoznano formatu pliku.',
+      version: 'Plik pochodzi z nowszej wersji aplikacji – zaktualizuj aplikację.',
+      other: 'Nie udało się odczytać pliku.',
+    },
+    exportError: 'Nie udało się udostępnić pliku.',
+    wipe: 'Usuń wszystkie dane z telefonu',
+    wipeHint: 'Historia, ćwiczenia i ustawienia wrócą do stanu początkowego.',
+    wipeConfirmTitle: 'Usunąć wszystkie dane?',
+    wipeConfirmBody:
+      'Tej operacji nie można cofnąć. Jeśli chcesz zachować historię, najpierw wyeksportuj dane.',
+    wipeConfirm: 'Usuń wszystko',
+    wiped: 'Dane zostały usunięte',
     account: 'Logowanie i synchronizacja',
     accountHint:
       'Wkrótce: konto i dane na wielu urządzeniach. Teraz wszystko jest bezpiecznie zapisane na tym telefonie.',
@@ -367,6 +396,25 @@ export const pl = {
         'Powiadomienia są zablokowane w ustawieniach systemu. Możesz je tam włączyć dla aplikacji Oddech.',
       openSettings: 'Otwórz ustawienia systemu',
       unsupported: 'Powiadomienia nie są dostępne na tym urządzeniu.',
+    },
+  },
+  onboarding: {
+    skip: 'Pomiń',
+    next: 'Dalej',
+    start: 'Zaczynamy',
+    later: 'Może później',
+    step: (n: number, total: number) => `Krok ${n} z ${total}`,
+    breath: {
+      title: 'Oddech przeponowy',
+      body: 'Przepona to główny mięsień oddechowy. Przy spokojnym wdechu nosem obniża się, a brzuch i dolne żebra miękko się rozszerzają. Klatka i barki zostają spokojne.',
+      body2:
+        'Długi, luźny wydech uspokaja układ nerwowy i pomaga puścić napięcie w barkach i szczęce.',
+      tryIt: 'Spróbuj teraz: wdech, gdy koło rośnie, wydech, gdy maleje.',
+    },
+    plan: {
+      title: 'Plan na 4 tygodnie',
+      body: 'Kilka minut rano i wieczorem, a w ciągu dnia westchnienie przy złapanym wstrzymaniu. Bez presji – liczy się regularność, nie perfekcja.',
+      startsToday: 'Tydzień 1 zaczyna się dziś. Datę zmienisz w Ustawieniach.',
     },
   },
   plural: {

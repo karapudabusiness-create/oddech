@@ -1,11 +1,15 @@
+import { Redirect } from 'expo-router';
 import { Tabs } from 'expo-router/tabs';
 import { CalendarDays, ChartLine, ListChecks, Settings, Wind } from 'lucide-react-native';
 
+import { useSettings } from '@/features/settings/useSettings';
 import { strings } from '@/i18n';
 import { fontFamilies, useTheme } from '@/theme';
 
 export default function TabsLayout() {
   const { colors } = useTheme();
+  const settings = useSettings();
+  if (settings && !settings.onboardingDone) return <Redirect href="/onboarding" />;
   return (
     <Tabs
       screenOptions={{

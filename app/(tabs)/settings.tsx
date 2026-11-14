@@ -14,6 +14,10 @@ import { Button, Card, LoadingState, Screen, Stepper, Text } from '@/components/
 import { db } from '@/db/client';
 import { updateSettings } from '@/db/repositories/settings';
 import type { SoundTheme } from '@/db/schema';
+import { wipeLocalData } from '@/db/repositories/maintenance';
+import { exportCsv, exportJson, pickImportFile } from '@/features/data/fileActions';
+import { ImportError } from '@/features/data/format';
+import { importOddech, importPrototype } from '@/features/data/importData';
 import { seedDemoHistory } from '@/features/dev/demoData';
 import { SOUND_THEMES } from '@/features/pacer/sounds';
 import { programPhase } from '@/features/program/plan';
@@ -43,6 +47,58 @@ export default function SettingsScreen() {
       : phase.kind === 'maintenance'
         ? t.phaseMaintenance
         : t.phaseNotStarted;
+
+  const runExport = async (fn: (d: typeof db) => Promise<void>) => {
+    try {
+      await fn(db);
+    } catch (e) {
+      if (__DEV__) console.warn(e);
+      showToast(t.exportError);
+    }
+  };
+
+  const runImport = async () => {
+    try {
+      const detected = await pickImportFile();
+      if (!detected) return;
+      const days =
+        detected.kind === 'oddech'
+          ? new Set([
+              ...detected.data.dayLogs.map((l) => l.date),
+              ...detected.data.completions.map((c) => c.date),
+            ]).size
+          : Object.keys(detected.data.logs).length;
+      Alert.alert(
+        t.importConfirmTitle,
+        detected.kind === 'oddech' ? t.importConfirmOddech(days) : t.importConfirmPrototype(days),
+        [
+          { text: strings.common.cancel, style: 'cancel' },
+          {
+            text: t.importConfirm,
+            onPress: async () => {
+              const summary =
+                detected.kind === 'oddech'
+                  ? await importOddech(db, detected.data)
+                  : await importPrototype(db, detected.data);
+              showToast(t.importDone(summary.days, summary.completions));
+            },
+          },
+        ],
+      );
+    } catch (e) {
+      showToast(e instanceof ImportError ? t.importErrors[e.code] : t.importErrors.other);
+    }
+  };
+
+  const wipe = () =>
+    Alert.alert(t.wipeConfirmTitle, t.wipeConfirmBody, [
+      { text: strings.common.cancel, style: 'cancel' },
+      {
+        text: t.wipeConfirm,
+        style: 'destructive',
+        onPress: () => void wipeLocalData(db).then(() => showToast(t.wiped)),
+      },
+    ]);
 
   const restart = () =>
     Alert.alert(t.restartConfirmTitle, t.restartConfirmBody, [
@@ -136,6 +192,18 @@ export default function SettingsScreen() {
 
       <Section title={t.sections.account}>
         <Row label={t.account} hint={t.accountHint} disabled />
+        <Divider />
+        <Row
+          label={t.exportJson}
+          hint={t.exportJsonHint}
+          onPress={() => void runExport(exportJson)}
+        />
+        <Divider />
+        <Row label={t.exportCsv} hint={t.exportCsvHint} onPress={() => void runExport(exportCsv)} />
+        <Divider />
+        <Row label={t.importJson} hint={t.importJsonHint} onPress={() => void runImport()} />
+        <Divider />
+        <Row label={t.wipe} hint={t.wipeHint} danger onPress={wipe} />
       </Section>
 
       {__DEV__ ? (
