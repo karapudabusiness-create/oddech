@@ -169,3 +169,41 @@ export async function setCompletionFeeling(db: Db, completionId: string, feeling
     .where(eq(exerciseCompletions.id, completionId));
   notifyLocalChange();
 }
+
+// ---------- Zakresy dat (kalendarz, statystyki) ----------
+
+export function completionsInRangeQuery(db: Db, from: DateKey, to: DateKey) {
+  return db
+    .select({
+      exerciseId: exerciseCompletions.exerciseId,
+      date: exerciseCompletions.date,
+      durationS: exerciseCompletions.durationS,
+      feeling: exerciseCompletions.feeling,
+    })
+    .from(exerciseCompletions)
+    .where(
+      and(
+        isNull(exerciseCompletions.deletedAt),
+        sql`${exerciseCompletions.date} >= ${from}`,
+        sql`${exerciseCompletions.date} <= ${to}`,
+      ),
+    );
+}
+
+export function dayLogsInRangeQuery(db: Db, from: DateKey, to: DateKey) {
+  return db
+    .select({
+      date: dayLogs.date,
+      catches: dayLogs.catches,
+      tension: dayLogs.tension,
+      note: dayLogs.note,
+    })
+    .from(dayLogs)
+    .where(
+      and(
+        isNull(dayLogs.deletedAt),
+        sql`${dayLogs.date} >= ${from}`,
+        sql`${dayLogs.date} <= ${to}`,
+      ),
+    );
+}

@@ -5,17 +5,23 @@ export interface ExerciseLifetime {
   active: boolean;
   createdAt: string;
   deletedAt: string | null;
+  /** Ćwiczenia startowe (seed) traktujemy jak istniejące od zawsze. */
+  seedKey?: string | null;
+}
+
+function deletedBy(e: ExerciseLifetime, date: DateKey): boolean {
+  return !!e.deletedAt && isoToDateKey(e.deletedAt) <= date;
 }
 
 /**
- * Czy ćwiczenie „liczy się” do planu danego dnia: istniało (utworzone najpóźniej tego dnia),
- * nie zostało usunięte przed tym dniem i jest aktywne.
+ * Czy ćwiczenie „liczy się” do planu danego dnia: jest aktywne, nie zostało usunięte przed tym dniem
+ * i istniało tego dnia (ćwiczenia startowe – zawsze). Dzięki temu dodanie nowego ćwiczenia
+ * nie zaniża procentów w historii.
  * Uwaga: przełącznik „aktywne” nie ma historii – wyłączenie ćwiczenia zmienia też przeszłe dni.
  */
 export function countsOnDay(e: ExerciseLifetime, date: DateKey): boolean {
-  if (!e.active) return false;
-  if (isoToDateKey(e.createdAt) > date) return false;
-  if (e.deletedAt && isoToDateKey(e.deletedAt) <= date) return false;
+  if (!e.active || deletedBy(e, date)) return false;
+  if (!e.seedKey && isoToDateKey(e.createdAt) > date) return false;
   return true;
 }
 
@@ -35,8 +41,13 @@ export function dayProgress(
   completedExerciseIds: Iterable<string>,
   date: DateKey,
 ): DayProgress {
-  const planned = new Set(exercises.filter((e) => countsOnDay(e, date)).map((e) => e.id));
   const doneSet = new Set(completedExerciseIds);
+  // Ćwiczenie wykonane danego dnia zawsze należy do planu tego dnia (np. uzupełnianie wstecz, import).
+  const planned = new Set(
+    exercises
+      .filter((e) => countsOnDay(e, date) || (doneSet.has(e.id) && e.active && !deletedBy(e, date)))
+      .map((e) => e.id),
+  );
   let done = 0;
   planned.forEach((id) => doneSet.has(id) && done++);
   const total = planned.size;

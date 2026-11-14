@@ -1,6 +1,8 @@
 import { View, Pressable } from 'react-native';
 
-import { Card, Screen, Text } from '@/components/ui';
+import { Button, Card, Screen, Text } from '@/components/ui';
+import { seedDemoHistory } from '@/features/dev/demoData';
+import { useToast } from '@/stores/toast';
 import { updateSettings } from '@/db/repositories/settings';
 import { db } from '@/db/client';
 import { useSettings } from '@/features/settings/useSettings';
@@ -16,6 +18,7 @@ const MODES: { value: ThemeMode; label: string }[] = [
 export default function SettingsScreen() {
   const settings = useSettings();
   const { colors, spacing, radii } = useTheme();
+  const showToast = useToast((st) => st.show);
   return (
     <Screen title={strings.settings.title}>
       <Card style={{ gap: spacing.md }}>
@@ -51,6 +54,20 @@ export default function SettingsScreen() {
           })}
         </View>
       </Card>
+      {__DEV__ ? (
+        <Card tone="soft" style={{ gap: spacing.sm }}>
+          <Text variant="label" color="textMuted">
+            {strings.settings.devTitle}
+          </Text>
+          <Button
+            label={strings.settings.devDemo}
+            variant="soft"
+            onPress={() =>
+              void seedDemoHistory(db).then(() => showToast(strings.settings.devDemoDone))
+            }
+          />
+        </Card>
+      ) : null}
     </Screen>
   );
 }

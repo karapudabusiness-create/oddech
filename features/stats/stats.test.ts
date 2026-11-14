@@ -62,6 +62,16 @@ describe('dayProgress', () => {
     });
   });
 
+  it('wykonanie ćwiczenia sprzed jego utworzenia (uzupełnianie wstecz) liczy się do planu', () => {
+    const list = [ex('a'), ex('late', { createdAt: '2026-11-10T08:00:00.000Z' })];
+    expect(dayProgress(list, ['late'], '2026-11-04')).toEqual({ done: 1, total: 2, ratio: 0.5 });
+  });
+
+  it('ćwiczenia startowe istnieją „od zawsze”', () => {
+    const seeded = { ...ex('s', { createdAt: '2026-11-10T08:00:00.000Z' }), seedKey: 'c1' };
+    expect(countsOnDay(seeded, '2026-01-01')).toBe(true);
+  });
+
   it('countsOnDay', () => {
     expect(countsOnDay(ex('a'), '2026-10-31')).toBe(false);
     expect(countsOnDay(ex('a'), '2026-11-01')).toBe(true);

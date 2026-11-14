@@ -51,6 +51,10 @@ function Navigation() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="exercise/[id]" options={{ presentation: 'modal' }} />
         <Stack.Screen
+          name="day/[date]"
+          options={{ headerShown: true, headerBackButtonDisplayMode: 'minimal' }}
+        />
+        <Stack.Screen
           name="pacer/[exerciseId]"
           options={{ presentation: 'fullScreenModal', animation: 'fade' }}
         />

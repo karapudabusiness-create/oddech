@@ -34,7 +34,8 @@ export interface Palette {
 
 export const palettes: Record<ColorScheme, Palette> = {
   light: {
-    primary: '#2E7DAF',
+    // Brief: #2E7DAF – minimalnie przyciemnione, by biały tekst miał ≥ 4.5:1 (AA).
+    primary: '#2C7AAB',
     primaryText: '#286F9C',
     onPrimary: '#FFFFFF',
     secondary: '#3BB08F',
@@ -51,7 +52,7 @@ export const palettes: Record<ColorScheme, Palette> = {
     border: '#D9E7EC',
     danger: '#D9604C',
     dangerText: '#B84A38',
-    scale: ['#E4F2F1', '#A8DCCB', '#3BB08F', '#2E7DAF'],
+    scale: ['#E4F2F1', '#A8DCCB', '#3BB08F', '#2C7AAB'],
     overlay: 'rgba(18, 48, 63, 0.35)',
     shadow: '#12303F',
   },

@@ -142,7 +142,32 @@ export const pl = {
       tempo: 'Wdech i wydech: od 0 do 30 s (oba 0 = bez pacera).',
     },
   },
-  calendar: { title: 'Kalendarz', placeholder: 'Kalendarz pojawi się w etapie 4.' },
+  calendar: {
+    title: 'Kalendarz',
+    weekdays: ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So', 'Nd'],
+    weekdaysLong: ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela'],
+    prevMonth: 'Poprzedni miesiąc',
+    nextMonth: 'Następny miesiąc',
+    backToToday: 'Dziś',
+    legend: 'Wykonanie planu dnia',
+    legendLevels: ['0%', '< 40%', '40–79%', '80–100%'],
+    legendEntry: 'notatka lub napięcie',
+    dayA11y: (label: string, done: number, total: number, entry: boolean) =>
+      `${label}. ${total ? `${done} z ${total} ćwiczeń` : 'Brak ćwiczeń w planie'}${entry ? '. Jest wpis w dzienniczku' : ''}`,
+    future: 'dzień w przyszłości',
+    statsTitle: 'Podsumowanie miesiąca',
+    stats: {
+      trainingDays: 'Dni z treningiem',
+      fullDays: 'Dni na 100%',
+      avgTension: 'Średnie napięcie',
+      catches: 'Złapane wstrzymania',
+    },
+    noTension: '–',
+    empty:
+      'W tym miesiącu nie ma jeszcze wpisów. Każdy oddech się liczy – zacznij od jednego ćwiczenia.',
+    editDay: 'Edycja dnia',
+    backfillHint: 'Uzupełniasz dzień wstecz – zmiany zapiszą się automatycznie.',
+  },
   pacer: {
     phase: { inhale: 'Wdech', exhale: 'Wydech', rest: 'Spokój' },
     phaseHint: {
@@ -202,6 +227,9 @@ export const pl = {
     themeDark: 'Ciemny',
     programStart: 'Start programu',
     catchGoal: 'Dzienny cel licznika',
+    devTitle: 'Narzędzia deweloperskie',
+    devDemo: 'Wypełnij 45 dni przykładowymi danymi',
+    devDemoDone: 'Dodano przykładową historię',
   },
   plural: {
     day: ['dzień', 'dni', 'dni'] as const,
