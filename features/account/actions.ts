@@ -7,25 +7,63 @@ import { useAccount } from '@/stores/account';
 import { clearSyncState, pendingCount } from '@/sync/engine';
 import { syncNow } from '@/sync/manager';
 
+export type AuthErrorCode =
+  | 'not-configured'
+  | 'invalid-email'
+  | 'invalid-code'
+  | 'rate-limit'
+  | 'network'
+  | 'invalid-key'
+  | 'signups-disabled'
+  | 'email-send'
+  | 'other';
+
 export class AuthActionError extends Error {
   constructor(
-    public readonly code:
-      'not-configured' | 'invalid-email' | 'invalid-code' | 'rate-limit' | 'network' | 'other',
+    public readonly code: AuthErrorCode,
+    /** Oryginalny komunikat serwera – pokazywany jako „szczegóły” (diagnostyka). */
+    public readonly detail?: string,
   ) {
-    super(code);
+    super(detail ? `${code}: ${detail}` : code);
   }
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** Tłumaczy błąd Supabase Auth na przyczynę zrozumiałą dla użytkownika (z oryginałem w `detail`). */
+export function mapAuthError(
+  e: { message?: string; status?: number; code?: string } | null,
+): AuthActionError {
+  const raw = e?.message ?? '';
+  const msg = raw.toLowerCase();
+  const detail = [e?.status, e?.code, raw].filter(Boolean).join(' · ');
+  if (msg.includes('api key') || msg.includes('apikey') || e?.status === 401) {
+    return new AuthActionError('invalid-key', detail);
+  }
+  if (e?.status === 429 || msg.includes('rate limit') || msg.includes('security purposes')) {
+    return new AuthActionError('rate-limit', detail);
+  }
+  if (
+    msg.includes('signups not allowed') ||
+    msg.includes('signup is disabled') ||
+    e?.code === 'signup_disabled'
+  ) {
+    return new AuthActionError('signups-disabled', detail);
+  }
+  if (msg.includes('sending') || msg.includes('smtp'))
+    return new AuthActionError('email-send', detail);
+  if (msg.includes('expired') || msg.includes('token') || e?.code === 'otp_expired') {
+    return new AuthActionError('invalid-code', detail);
+  }
+  if (msg.includes('network') || msg.includes('fetch'))
+    return new AuthActionError('network', detail);
+  return new AuthActionError('other', detail);
+}
+
 function mapError(e: { message?: string; status?: number; code?: string } | null): AuthActionError {
-  const msg = (e?.message ?? '').toLowerCase();
-  if (e?.status === 429 || msg.includes('rate limit') || msg.includes('security purposes'))
-    return new AuthActionError('rate-limit');
-  if (msg.includes('expired') || msg.includes('invalid') || e?.code === 'otp_expired')
-    return new AuthActionError('invalid-code');
-  if (msg.includes('network') || msg.includes('fetch')) return new AuthActionError('network');
-  return new AuthActionError('other');
+  const err = mapAuthError(e);
+  if (__DEV__) console.warn('Supabase auth error:', err.code, err.detail);
+  return err;
 }
 
 /** Wysyła e-mail z 6-cyfrowym kodem (i linkiem logowania). Konto jest zakładane automatycznie. */
@@ -33,11 +71,16 @@ export async function sendLoginCode(email: string): Promise<void> {
   if (!supabase) throw new AuthActionError('not-configured');
   const clean = email.trim().toLowerCase();
   if (!EMAIL_RE.test(clean)) throw new AuthActionError('invalid-email');
-  const { error } = await supabase.auth.signInWithOtp({
-    email: clean,
-    options: { shouldCreateUser: true, emailRedirectTo: Linking.createURL('auth/callback') },
-  });
-  if (error) throw mapError(error);
+  try {
+    const { error } = await supabase.auth.signInWithOtp({
+      email: clean,
+      options: { shouldCreateUser: true, emailRedirectTo: Linking.createURL('auth/callback') },
+    });
+    if (error) throw mapError(error);
+  } catch (e) {
+    if (e instanceof AuthActionError) throw e;
+    throw mapError(e as Error);
+  }
 }
 
 export async function verifyLoginCode(email: string, code: string): Promise<void> {

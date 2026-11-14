@@ -469,10 +469,18 @@ export const pl = {
       'invalid-email': 'Sprawdź adres e-mail.',
       'invalid-code': 'Kod jest nieprawidłowy albo wygasł. Wyślij nowy.',
       'rate-limit': 'Zbyt wiele prób. Odczekaj chwilę i spróbuj ponownie.',
-      network: 'Brak połączenia z internetem.',
+      network:
+        'Brak połączenia z serwerem. Sprawdź internet i adres EXPO_PUBLIC_SUPABASE_URL w .env.',
+      'invalid-key':
+        'Serwer odrzucił klucz. Sprawdź EXPO_PUBLIC_SUPABASE_ANON_KEY w .env (klucz publishable / anon).',
+      'signups-disabled':
+        'Rejestracja jest wyłączona w Supabase. Włącz: Authentication → Sign In / Providers → Allow new users to sign up oraz Email.',
+      'email-send':
+        'Supabase nie mógł wysłać e-maila. Sprawdź szablon wiadomości (Authentication → Emails) i logi Auth w panelu.',
       other: 'Coś poszło nie tak. Spróbuj ponownie.',
     },
     rowSignedOut: 'Zaloguj się, by synchronizować',
+    details: (d: string) => `Szczegóły: ${d}`,
   },
   plural: {
     day: ['dzień', 'dni', 'dni'] as const,

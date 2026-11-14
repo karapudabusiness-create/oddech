@@ -33,7 +33,10 @@ const t = strings.account;
 const RESEND_S = 60;
 
 function errorText(e: unknown): string {
-  return t.errors[e instanceof AuthActionError ? e.code : 'other'];
+  const base = t.errors[e instanceof AuthActionError ? e.code : 'other'];
+  const detail =
+    e instanceof AuthActionError ? e.detail : e instanceof Error ? e.message : undefined;
+  return detail ? `${base}\n\n${t.details(detail)}` : base;
 }
 
 function SignInForm() {
