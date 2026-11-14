@@ -95,12 +95,12 @@ export async function sendLoginCode(email: string): Promise<void> {
 
 export async function verifyLoginCode(email: string, code: string): Promise<void> {
   if (!supabase) throw new AuthActionError('not-configured');
-  const { error } = await supabase.auth.verifyOtp({
-    email: email.trim().toLowerCase(),
-    token: code.replace(/\D/g, ''),
-    type: 'email',
-  });
-  if (error) throw mapError(error);
+  const params = { email: email.trim().toLowerCase(), token: code.replace(/\D/g, '') };
+  // Kod z wiadomości logowania ma typ „email”, z pierwszej wiadomości (potwierdzenie konta) – „signup”.
+  const first = await supabase.auth.verifyOtp({ ...params, type: 'email' });
+  if (!first.error) return;
+  const second = await supabase.auth.verifyOtp({ ...params, type: 'signup' });
+  if (second.error) throw mapError(first.error);
 }
 
 /** Link z e-maila (PKCE): oddech://auth/callback?code=… */
